@@ -19,12 +19,12 @@
     var fill4 = 'rgb(243,134,48)'
     var brush4 = 'rgb(203,84,08)';
 
-    diagram.nodeTemplateMap.add('', // default category
-      G(go.Node, 'Auto',
-        {locationSpot: go.Spot.Center},
+    var getTemplateMap = function(direction) {
+      return G(go.Node, direction || 'Vertical',
+        {locationSpot: go.Spot.Left},
         new go.Binding('location', 'loc', go.Point.parse).makeTwoWay(go.Point.stringify),
-        G(go.Shape, 'Ellipse',
-          {strokeWidth: 2, fill: fill1, name: 'SHAPE'},
+        G(go.Picture, './assets/images/warehouse.png',
+          {width: 30, height: 30},
           new go.Binding('figure', 'figure'),
           new go.Binding('fill', 'fill'),
           new go.Binding('stroke', 'stroke')
@@ -42,7 +42,10 @@
           new go.Binding('text', 'text').makeTwoWay()
         )
       )
-    );
+    }
+
+    // 为每个节点声明模版
+    diagram.nodeTemplateMap.add('', getTemplateMap('Vertical'));
 
     // 在主区域内有选中节点时显示属性面板
     diagram.addDiagramListener('changedSelection', function (e) {
@@ -55,19 +58,21 @@
       }
     })
 
+    // 操作可回溯
+    diagram.model.undoManager.isEnabled = true;
 
     // initialize the Palette that is in a floating, draggable HTML container
-    var myPalette = G(go.Palette, 'paletteContainer');  // must name or refer to the DIV HTML element
+    var palette = G(go.Palette, 'paletteContainer');  // must name or refer to the DIV HTML element
 
-    myPalette.nodeTemplateMap = diagram.nodeTemplateMap;
-    myPalette.model = new go.GraphLinksModel([
+    palette.nodeTemplateMap.add('', getTemplateMap('Horizontal'));
+    palette.model = new go.GraphLinksModel([
       {text: 'Lake', fill: fill1, stroke: brush1, figure: 'Hexagon'},
       {text: 'Ocean', fill: fill2, stroke: brush2, figure: 'Rectangle'},
       {text: 'Sand', fill: fill3, stroke: brush3, figure: 'Diamond'},
       {text: 'Goldfish', fill: fill4, stroke: brush4, figure: 'Octagon'}
     ]);
 
-    myPalette.addDiagramListener('InitialLayoutCompleted', function (diagramEvent) {
+    palette.addDiagramListener('InitialLayoutCompleted', function (diagramEvent) {
       var palette = diagramEvent.diagram;
       var paletteBounds = palette.documentBounds;
 
@@ -91,7 +96,7 @@
     $draggableSide.draggable({handle: '#draggableSideHandle'}).resizable({
       // After resizing, perform another layout to fit everything in the palette's viewport
       stop: function () {
-        myPalette.layoutDiagram(true);
+        palette.layoutDiagram(true);
       }
     });
 
