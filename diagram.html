@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Diagram Demo</title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="./assets/css/jquery-ui.min.css"/>
+  <link rel="stylesheet" href="./extensions/DataInspector.css"/>
+  <link rel="stylesheet" href="diagram.css"/>
+  <script src="./assets/js/jquery.min.js"></script>
+  <script src="./assets/js/jquery-ui.min.js"></script>
+  <script src="./release/go.js"></script>
+  <script src="./extensions/DataInspector.js"></script>
+  <script src="./diagram.js"></script>
+</head>
+
+<body>
+<div class="diagram-wrapper">
+  <!--拖拽区域-->
+  <div id="draggableSide" class="draggable">
+    <div id="draggableSideHandle" class="handle">仓库</div>
+    <div id="draggableSideContainer">
+      <div id="paletteContainer"></div>
+    </div>
+  </div>
+
+  <!--渲染区域-->
+  <div id="diagramSide"></div>
+
+  <!--配置区域-->
+  <div id="settingSide" class="draggable">
+    <div id="settingSideHandle" class="handle">配置</div>
+    <div id="settingSideContainer"></div>
+  </div>
+</div>
+</body>
+</html>
