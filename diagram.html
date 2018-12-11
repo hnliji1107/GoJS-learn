@@ -11,16 +11,27 @@
   <script src="./assets/js/jquery-ui.min.js"></script>
   <script src="./release/go.js"></script>
   <script src="./extensions/DataInspector.js"></script>
+  <script src="./warehousePalette.js"></script>
+  <script src="./areaPalette.js"></script>
+  <script src="./initDiagram.js"></script>
   <script src="./diagram.js"></script>
 </head>
 
 <body>
 <div class="diagram-wrapper">
-  <!--拖拽区域-->
-  <div id="draggableSide" class="draggable">
-    <div id="draggableSideHandle" class="handle">仓库</div>
-    <div id="draggableSideContainer">
-      <div id="paletteContainer"></div>
+  <!--仓库区域-->
+  <div id="warehouseDraggableSide" class="draggable">
+    <div id="warehouseDraggableSideHandle" class="handle">仓库</div>
+    <div id="warehouseDraggableSideContainer">
+      <div id="warehousePaletteContainer"></div>
+    </div>
+  </div>
+
+  <!--地区区域-->
+  <div id="areaDraggableSide" class="draggable">
+    <div id="areaDraggableSideHandle" class="handle">区域</div>
+    <div id="areaDraggableSideContainer">
+      <div id="areaPaletteContainer"></div>
     </div>
   </div>
 
