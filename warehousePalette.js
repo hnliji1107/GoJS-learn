@@ -5,7 +5,7 @@ window.warehousePalette = function (G, diagram, nodeData) {
 
   var nodeTemplateMap = G(go.Node, 'Horizontal',
     {locationSpot: go.Spot.Left},
-    new go.Binding('location', 'loc', go.Point.parse).makeTwoWay(go.Point.stringify),
+    new go.Binding('location', 'loc', go.Point.parse),
     G(go.Picture, './assets/images/warehouse.png', {width: 30, height: 30}),
     G(go.TextBlock,
       {
@@ -17,7 +17,7 @@ window.warehousePalette = function (G, diagram, nodeData) {
         font: 'bold 9pt Helvetica, Arial, sans-serif',
         name: 'TEXT'
       },
-      new go.Binding('text', 'text').makeTwoWay()
+      new go.Binding('text', 'text')
     )
   )
 

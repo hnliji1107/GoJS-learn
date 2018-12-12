@@ -4,7 +4,7 @@ window.initDiagram = function (G, diagram) {
   var defaultNodeTemplate = G(go.Node, 'Vertical', {
       locationSpot: go.Spot.Left
     },
-    new go.Binding('location', 'loc', go.Point.parse).makeTwoWay(go.Point.stringify),
+    new go.Binding('location', 'location', go.Point.parse),
     G(go.Picture, {
         width: 30,
         height: 30,
@@ -44,7 +44,7 @@ window.initDiagram = function (G, diagram) {
         font: 'bold 9pt Helvetica, Arial, sans-serif',
         name: 'TEXT'
       },
-      new go.Binding('text', 'text').makeTwoWay()
+      new go.Binding('text', 'text')
     )
   );
 
@@ -57,13 +57,22 @@ window.initDiagram = function (G, diagram) {
       resegmentable: true,
       corner: 5
     },
-    G(go.Shape, new go.Binding('stroke', 'color').makeTwoWay()),
+    G(go.Shape, new go.Binding('stroke', 'linkColor')),
     G(go.Shape, { toArrow: 'standard' },
-      new go.Binding('fill', 'color').makeTwoWay(),
-      new go.Binding('stroke', 'color').makeTwoWay()
+      new go.Binding('fill', 'linkColor'),
+      new go.Binding('stroke', 'linkColor')
     ),
-    G(go.TextBlock, { margin: 3, editable: true },
-      new go.Binding('text', 'text').makeTwoWay()
+    G(go.Panel, 'Auto', // this whole Panel is a link label
+      G(go.Shape, { visible: false },
+        new go.Binding('visible', 'linkShape', function (val) { return val !== '无' }),
+        new go.Binding('figure', 'linkShape'),
+        new go.Binding('fill', 'linkLabelBackground'),
+        new go.Binding('stroke', 'linkLabelBorderColor')
+      ),
+      G(go.TextBlock, { margin: 3, editable: true },
+        new go.Binding('text', 'linkLabel'),
+        new go.Binding('stroke', 'linkLabelColor')
+      )
     )
   );
 
@@ -78,17 +87,6 @@ window.initDiagram = function (G, diagram) {
     var node = e.diagram.selection.first();
 
     if (node instanceof go.Node || node instanceof go.Link) {
-      // 为每个链接添加color和text属性（不存在的情况下）
-      if (node instanceof go.Link) {
-        if (!node.data.text) {
-          diagram.model.setDataProperty(node.data, 'text', '');
-        }
-
-        if (!node.data.color) {
-          diagram.model.setDataProperty(node.data, 'color', 'black');
-        }
-      }
-
       $settingSide.show();
     } else {
       $settingSide.hide();
@@ -103,28 +101,38 @@ window.initDiagram = function (G, diagram) {
 
   // 初始化关系
   diagram.model = new go.GraphLinksModel([
-    { key: 'w1', text: '仓库一', loc: '9 -66' },
-    { key: 'w2', text: '仓库二', loc: '9 -200' },
-    { key: 'a1', text: '区域一', loc: '-250 100' },
-    { key: 'a2', text: '区域二', loc: '250 100' }
+    { key: 'w1', text: '仓库一', location: '9 -66' },
+    { key: 'w2', text: '仓库二', location: '9 -200' },
+    { key: 'a1', text: '区域一', location: '-250 100' },
+    { key: 'a2', text: '区域二', location: '250 100' }
   ], [
-    { from: 'w1', to: 'a1', text: '', color: 'black' },
-    { from: 'w1', to: 'a2', text: '', color: 'black' },
-    { from: 'w2', to: 'a1', text: '第一条连接线', color: 'black' },
-    { from: 'w2', to: 'a2', text: '', color: 'black' }
+    { from: 'w1', to: 'a1' },
+    { from: 'w1', to: 'a2' },
+    { from: 'w2', to: 'a1', linkLabel: '第一条连接线' },
+    { from: 'w2', to: 'a2' }
   ]);
 
 
   // 属性面板初始化
   new Inspector('settingSideContainer', diagram, {
     properties: {
-      // key would be automatically added for nodes, but we want to declare it read-only also:
-      'key': { readOnly: true, show: false },
+      'key': { show: false },
       'from': { show: false },
       'to': { show: false },
-      'color': { show: Inspector.showIfPresent, type: 'color', alias: '颜色' },
-      'text': { show: Inspector.showIfPresent, alias: '文案' },
-      'loc': { show: Inspector.showIfPresent, alias: '位置' }
+      'text': { show: Inspector.showIfNode, alias: '文案' },
+      'location': { show: Inspector.showIfNode, alias: '位置' },
+      'linkColor': { show: Inspector.showIfLink, type: 'color', alias: '线条颜色' },
+      'linkShape': {
+        show: Inspector.showIfLink,
+        type: 'select',
+        choices: ['无', 'Rectangle', 'Square', 'RoundedRectangle', 'Border', 'Circle', 'TriangleRight', 'TriangleDown', 'TenPointedStar'],
+        alias: '标注形状',
+        defaultValue: '无'
+      },
+      'linkLabel': { show: Inspector.showIfLink, alias: '标注内容' },
+      'linkLabelBackground': { show: Inspector.showIfLink, type: 'color', alias: '标注背景色' },
+      'linkLabelBorderColor': { show: Inspector.showIfLink, type: 'color', alias: '标注边框色' },
+      'linkLabelColor': { show: Inspector.showIfLink, type: 'color', alias: '标注字体色' }
     }
   });
 }
