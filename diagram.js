@@ -5,6 +5,8 @@
     var $warehouseDraggableSide = $('#warehouseDraggableSide');
     var $areaDraggableSide = $('#areaDraggableSide');
     var $settingSide = $('#settingSide');
+    var $saveModel = $('#saveModel');
+
     var warehousePalettle = window.warehousePalette(G, diagram, [
       {key: 'w1', text: '仓库一'},
       {key: 'w2', text: '仓库二'},
@@ -54,5 +56,11 @@
 
     // 配置面板初始化
     $settingSide.draggable({handle: '#settingSideHandle'});
+
+    // 保存模型数据
+    $saveModel.on('click', function () {
+      console.log(diagram.model.nodeDataArray)
+      console.log(diagram.model.linkDataArray)
+    })
   });
 })()

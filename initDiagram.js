@@ -1,11 +1,11 @@
 window.initDiagram = function (G, diagram) {
   var $settingSide = $('#settingSide');
 
-  var nodeTemplateMap = G(go.Node, 'Vertical',
-    {locationSpot: go.Spot.Left},
+  var defaultNodeTemplate = G(go.Node, 'Vertical', {
+      locationSpot: go.Spot.Left
+    },
     new go.Binding('location', 'loc', go.Point.parse).makeTwoWay(go.Point.stringify),
-    G(go.Picture,
-      {
+    G(go.Picture, {
         width: 30,
         height: 30,
         portId: '',
@@ -24,10 +24,10 @@ window.initDiagram = function (G, diagram) {
 
         switch (key[0]) {
           case 'w':
-            source = './assets/images/warehouse.png'
+            source = './assets/images/warehouse.png';
             break;
           case 'a':
-            source = './assets/images/area.png'
+            source = './assets/images/area.png';
           default:
             break;
         }
@@ -35,8 +35,7 @@ window.initDiagram = function (G, diagram) {
         return source;
       })
     ),
-    G(go.TextBlock,
-      {
+    G(go.TextBlock, {
         margin: 5,
         maxSize: new go.Size(200, NaN),
         wrap: go.TextBlock.WrapFit,
@@ -47,14 +46,9 @@ window.initDiagram = function (G, diagram) {
       },
       new go.Binding('text', 'text').makeTwoWay()
     )
-  )
+  );
 
-  // 为每个节点声明模版
-  diagram.nodeTemplateMap.add('', nodeTemplateMap);
-
-  // 为每个链接声明模版
-  diagram.linkTemplate = G(go.Link,
-    {
+  var defaultLinkTemplate = G(go.Link, {
       routing: go.Link.AvoidsNodes,
       curve: go.Link.JumpOver,
       relinkableFrom: true,
@@ -68,16 +62,33 @@ window.initDiagram = function (G, diagram) {
       new go.Binding('fill', 'color').makeTwoWay(),
       new go.Binding('stroke', 'color').makeTwoWay()
     ),
-    G(go.TextBlock, { margin: 3, editable: true, segmentIndex: 2, segmentFraction: 0.5 },
+    G(go.TextBlock, { margin: 3, editable: true },
       new go.Binding('text', 'text').makeTwoWay()
     )
   );
+
+  // 为每个节点声明模版
+  diagram.nodeTemplateMap.add('', defaultNodeTemplate);
+
+  // 为每个链接声明模版
+  diagram.linkTemplateMap.add('', defaultLinkTemplate);
 
   // 在主区域内有选中节点时显示属性面板
   diagram.addDiagramListener('changedSelection', function (e) {
     var node = e.diagram.selection.first();
 
     if (node instanceof go.Node || node instanceof go.Link) {
+      // 为每个链接添加color和text属性（不存在的情况下）
+      if (node instanceof go.Link) {
+        if (!node.data.text) {
+          diagram.model.setDataProperty(node.data, 'text', '');
+        }
+
+        if (!node.data.color) {
+          diagram.model.setDataProperty(node.data, 'color', 'black');
+        }
+      }
+
       $settingSide.show();
     } else {
       $settingSide.hide();

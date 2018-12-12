@@ -32,6 +32,11 @@ html, body {
   font: bold 12px sans-serif;
 }
 
+#saveModel {
+  position: absolute;
+  right: 0;
+}
+
 #settingSide {
   display: none;
   position: absolute;
