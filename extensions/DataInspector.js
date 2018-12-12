@@ -38,7 +38,7 @@
     {
       includesOwnProperties: false,
       properties: {
-        "key": { show: Inspector.showIfPresent, readOnly: true },
+        "key": { show: Inspector.showIfPresent, readOnly: true, alias: '主键' },
         "comments": { show: Inspector.showIfNode  },
         "LinkComments": { show: Inspector.showIfLink },
         "chosen": { show: Inspector.showIfNode, type: "checkbox" },
@@ -391,15 +391,15 @@ Inspector.prototype.findValue = function(propName, propDesc, data) {
 * @return the table row
 */
 Inspector.prototype.buildPropertyRow = function(propertyName, propertyValue) {
+  var decProp = this.declaredProperties[propertyName];
   var mainDiv = this._div;
   var tr = document.createElement("tr");
 
   var td1 = document.createElement("td");
-  td1.textContent = propertyName;
+  td1.textContent = (decProp && decProp.alias) || propertyName;
   tr.appendChild(td1);
 
   var td2 = document.createElement("td");
-  var decProp = this.declaredProperties[propertyName];
   var input = null;
   var self = this;
   function updateall() { self.updateAllProperties(); }

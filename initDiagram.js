@@ -119,11 +119,12 @@ window.initDiagram = function (G, diagram) {
   new Inspector('settingSideContainer', diagram, {
     properties: {
       // key would be automatically added for nodes, but we want to declare it read-only also:
-      'key': {readOnly: true, show: false},
+      'key': { readOnly: true, show: false },
       'from': { show: false },
       'to': { show: false },
-      // fill and stroke would be automatically added for nodes, but we want to declare it a color also:
-      'color': {show: Inspector.showIfPresent, type: 'color'}
+      'color': { show: Inspector.showIfPresent, type: 'color', alias: '颜色' },
+      'text': { show: Inspector.showIfPresent, alias: '文案' },
+      'loc': { show: Inspector.showIfPresent, alias: '位置' }
     }
   });
 }

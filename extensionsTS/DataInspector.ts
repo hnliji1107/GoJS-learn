@@ -39,7 +39,7 @@ import * as go from '../release/go';
  *   {
  *     includesOwnProperties: false,
  *     properties: {
- *       "key": { show: Inspector.showIfPresent, readOnly: true },
+ *       "key": { show: Inspector.showIfPresent, readOnly: true, alias: '主键' },
  *       "comments": { show: Inspector.showIfNode  },
  *       "LinkComments": { show: Inspector.showIfLink },
  *       "chosen": { show: Inspector.showIfNode, type: "checkbox" },
@@ -401,15 +401,15 @@ export class Inspector {
    * @return the table row
    */
   public buildPropertyRow(propertyName: string, propertyValue: any): HTMLTableRowElement {
+    const decProp = this.declaredProperties[propertyName];
     const mainDiv = this._div;
     const tr = document.createElement('tr');
 
     const td1 = document.createElement('td');
-    td1.textContent = propertyName;
+    td1.textContent = (decProp && decProp.alias) || propertyName;
     tr.appendChild(td1);
 
     const td2 = document.createElement('td');
-    const decProp = this.declaredProperties[propertyName];
     let input = null;
     const self = this;
     function updateall() { self.updateAllProperties(); }
