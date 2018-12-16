@@ -1,6 +1,31 @@
 window.initDiagram = function (G, diagram) {
   var $settingSide = $('#settingSide');
 
+  var initSettingPane = function() {
+    // 属性面板初始化
+    new Inspector('settingSideContainer', diagram, {
+      properties: {
+        'key': { show: false },
+        'from': { show: false },
+        'to': { show: false },
+        'text': { show: Inspector.showIfNode, alias: '文案' },
+        'location': { show: Inspector.showIfNode, alias: '位置' },
+        'linkColor': { show: Inspector.showIfLink, type: 'color', alias: '线条颜色' },
+        'linkShape': {
+          show: Inspector.showIfLink,
+          type: 'select',
+          choices: ['无', 'Rectangle', 'Square', 'RoundedRectangle', 'Border', 'Circle', 'TriangleRight', 'TriangleDown', 'TenPointedStar'],
+          alias: '标注形状',
+          defaultValue: '无'
+        },
+        'linkLabel': { show: Inspector.showIfLink, alias: '标注内容' },
+        'linkLabelBackground': { show: Inspector.showIfLink, type: 'color', alias: '标注背景色' },
+        'linkLabelBorderColor': { show: Inspector.showIfLink, type: 'color', alias: '标注边框色' },
+        'linkLabelColor': { show: Inspector.showIfLink, type: 'color', alias: '标注字体色' }
+      }
+    });
+  }
+
   var defaultNodeTemplate = G(go.Node, 'Vertical', {
       locationSpot: go.Spot.Left
     },
@@ -91,6 +116,9 @@ window.initDiagram = function (G, diagram) {
     } else {
       $settingSide.hide();
     }
+
+    // 选中事件触发时，重新初始化配置面板
+    initSettingPane();
   })
 
   // 操作可回溯
@@ -112,27 +140,6 @@ window.initDiagram = function (G, diagram) {
     { from: 'w2', to: 'a2' }
   ]);
 
-
-  // 属性面板初始化
-  new Inspector('settingSideContainer', diagram, {
-    properties: {
-      'key': { show: false },
-      'from': { show: false },
-      'to': { show: false },
-      'text': { show: Inspector.showIfNode, alias: '文案' },
-      'location': { show: Inspector.showIfNode, alias: '位置' },
-      'linkColor': { show: Inspector.showIfLink, type: 'color', alias: '线条颜色' },
-      'linkShape': {
-        show: Inspector.showIfLink,
-        type: 'select',
-        choices: ['无', 'Rectangle', 'Square', 'RoundedRectangle', 'Border', 'Circle', 'TriangleRight', 'TriangleDown', 'TenPointedStar'],
-        alias: '标注形状',
-        defaultValue: '无'
-      },
-      'linkLabel': { show: Inspector.showIfLink, alias: '标注内容' },
-      'linkLabelBackground': { show: Inspector.showIfLink, type: 'color', alias: '标注背景色' },
-      'linkLabelBorderColor': { show: Inspector.showIfLink, type: 'color', alias: '标注边框色' },
-      'linkLabelColor': { show: Inspector.showIfLink, type: 'color', alias: '标注字体色' }
-    }
-  });
+  // 初始化配置面板
+  initSettingPane();
 }

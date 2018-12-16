@@ -34,7 +34,7 @@ html, body {
 
 #saveModel {
   position: absolute;
-  right: 0;
+  right: -80px;
 }
 
 #settingSide {
