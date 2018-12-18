@@ -1,7 +1,11 @@
 (function init() {
   $(function () {
     var G = go.GraphObject.make;  // for conciseness in defining templates
-    var diagram = G(go.Diagram, 'diagramSide', {allowDrop: true});  // must be true to accept drops from the Palette
+    var diagram = G(go.Diagram, 'diagramSide', {
+      allowDrop: true,
+      initialContentAlignment: go.Spot.Center,
+      'undoManager.isEnabled': true
+    });  // must be true to accept drops from the Palette
     var $warehouseDraggableSide = $('#warehouseDraggableSide');
     var $areaDraggableSide = $('#areaDraggableSide');
     var $settingSide = $('#settingSide');

@@ -119,13 +119,7 @@ window.initDiagram = function (G, diagram) {
 
     // 选中事件触发时，重新初始化配置面板
     initSettingPane();
-  })
-
-  // 操作可回溯
-  diagram.model.undoManager.isEnabled = true;
-
-  // 初始化位置
-  diagram.initialContentAlignment = go.Spot.Center;
+  });
 
   // 初始化关系
   diagram.model = new go.GraphLinksModel([
